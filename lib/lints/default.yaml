@@ -1,0 +1,24 @@
+## This file is for my default Dart/Flutter analysis configuration.
+## To use this as the default analytics file, include only this line in analysis_options.yaml:
+
+# include: package:localpkg/lints/default.yaml
+
+## resources:
+## - https://dart.dev/go/core-lints
+## - https://dart.dev/guides/language/analysis-options
+
+include: package:lints/recommended.yaml
+
+analyzer:
+  errors:
+    prefer_const_constructors: ignore
+    non_constant_identifier_names: ignore
+    dead_code: ignore
+    unused_local_variable: info
+    curly_braces_in_flow_control_structures: ignore
+    must_be_immutable: ignore
+    avoid_print: warning
+
+linter:
+  rules:
+    - avoid_print

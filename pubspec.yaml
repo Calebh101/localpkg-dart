@@ -1,0 +1,16 @@
+name: localpkg_dart
+description: A version of localpkg, but for Dart only.
+version: 1.0.0
+repository: https://github.com/Calebh101/localpkg-dart
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+# Add regular dependencies here.
+dependencies:
+  # path: ^1.9.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6
