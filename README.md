@@ -24,4 +24,4 @@ include: package:localpkg/lints/default.yaml
 
 There are also some scripts that can be used with `dart run <script>`:
 
-- `locakpkg_dart:update`: Update localpkg in the Flutter project.
+- `localpkg:update`: Update localpkg in the Flutter project.
