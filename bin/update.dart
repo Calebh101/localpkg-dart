@@ -7,7 +7,8 @@ import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
-const String package = "localpkg-dart";
+const String repo = "localpkg-dart";
+const String package = "localpkg_dart";
 
 void _debug(Object? input) {
   // ignore: avoid_print
@@ -19,7 +20,7 @@ void main(List<String> arguments) async {
 
   ArgParser parser = ArgParser()
     ..addOption("directory", abbr: "d", help: "Working directory of Flutter project.", defaultsTo: Directory.current.path)
-    ..addOption("commit", abbr: "c", help: "Commit to use for localpkg.")
+    ..addOption("commit", abbr: "c", help: "Commit to use for $package.")
     ..addFlag("help", abbr: "h", help: "Show help message.");
 
   String usage = "Usage:\n\n${parser.usage}";
@@ -45,10 +46,10 @@ void main(List<String> arguments) async {
   YamlEditor editor = YamlEditor(await pubspec.readAsString());
   var loaded = editor.parseAt([]);
   var data = yamlToMap(loaded);
-  Map<String, dynamic>? localpkg = data["dependencies"]?["localpkg"];
+  Map<String, dynamic>? localpkg = data["dependencies"]?[package];
 
   if (localpkg == null) {
-    _debug("Data for localpkg does not exist.");
+    _debug("Data for $package does not exist.");
     exit(1);
   }
 
@@ -56,7 +57,7 @@ void main(List<String> arguments) async {
   if (initialCommitSetting == "main") initialCommitSetting = null;
 
   _debug("Fetching latest commit...");
-  http.Response response = await http.get(Uri.parse("https://api.github.com/repos/Calebh101/$package/commits/${args["commit"] ?? "main"}"));
+  http.Response response = await http.get(Uri.parse("https://api.github.com/repos/Calebh101/$repo/commits/${args["commit"] ?? "main"}"));
 
   if (response.statusCode < 200 || response.statusCode >= 300) {
     _debug("Received bad request for API call: code ${response.statusCode}.");
@@ -70,12 +71,12 @@ void main(List<String> arguments) async {
   _debug("Found commit ID of $sha: $message");
 
   if (sha == initialCommitSetting) {
-    _debug("Package localpkg is up to date.");
+    _debug("Package $package is up to date.");
     exit(0);
   }
 
   _debug("Updating data...");
-  editor.update(["dependencies", "localpkg", "git", "ref"], sha);
+  editor.update(["dependencies", package, "git", "ref"], sha);
   await pubspec.writeAsString(editor.toString());
   await resetGitCache(sha);
 
@@ -89,7 +90,7 @@ void main(List<String> arguments) async {
     _debug("Process failed with code $exitCode.");
     exit(-1);
   } {
-    _debug("Job done! Updated to commit $sha ($message) from commit $initialCommitSetting.");
+    _debug("Job done! Updated $package to commit $sha ($message) from commit $initialCommitSetting.");
     exit(0);
   }
 }
@@ -116,7 +117,7 @@ Future<void> resetGitCache(String sha) async {
   Directory? cached;
 
   for (var file in files) {
-    if (file is Directory && file.path.contains(package)) {
+    if (file is Directory && file.path.contains(repo)) {
       cached = file;
       break;
     }
