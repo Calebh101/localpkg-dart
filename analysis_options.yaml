@@ -1,5 +1,1 @@
-include: "package:localpkg/lints/default.yaml"
-
-linter:
-  rules:
-    - public_member_api_docs
+include: "package:localpkg/lints/dev.yaml"
