@@ -1,1 +1,1 @@
-export 'package:localpkg_dart/src/platform_other.dart' if (dart.library.html) 'package:localpkg_dart/src/platform_web.dart';
+export 'package:localpkg/src/platform_other.dart' if (dart.library.html) 'package:localpkg_dart/src/platform_web.dart';

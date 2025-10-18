@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:localpkg_dart/src/platform_detect.dart';
+import 'package:localpkg/src/platform_detect.dart';
 
 
 /// Mode used to format time in [TimeFormatter].

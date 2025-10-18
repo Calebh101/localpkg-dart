@@ -1,5 +1,5 @@
-name: localpkg_dart
-description: A version of localpkg, but for Dart only.
+name: localpkg
+description: The base of localpkg.
 version: 1.0.0
 repository: https://github.com/Calebh101/localpkg-dart
 publish_to: none
