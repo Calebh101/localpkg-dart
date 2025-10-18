@@ -1,1 +1,5 @@
-include: package:localpkg_dart/lints/default.yaml
+include: "package:localpkg_dart/lints/default.yaml"
+
+linter:
+  rules:
+    - public_member_api_docs

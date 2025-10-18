@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:localpkg_dart/src/platform_other.dart' if (dart.library.html) 'package:localpkg_dart/src/platform_web.dart';
+import 'package:localpkg_dart/src/platform_detect.dart';
+
 
 /// Mode used to format time in [TimeFormatter].
 enum FormatTimeMode {
