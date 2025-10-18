@@ -8,7 +8,7 @@ import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 const String repo = "localpkg-dart";
-const String package = "localpkg_dart";
+const String package = "localpkg";
 
 void _debug(Object? input) {
   // ignore: avoid_print
