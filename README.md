@@ -8,7 +8,7 @@ In your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-    localpkg_dart:
+    localpkg:
         git:
             url: https://github.com/Calebh101/localpkg-dart.git
             ref: main
@@ -19,7 +19,7 @@ dependencies:
 For using the global analysis template, add this to your `analysis_options.yaml`:
 
 ```yaml
-include: package:localpkg_dart/lints/default.yaml
+include: package:localpkg/lints/default.yaml
 ```
 
 There are also some scripts that can be used with `dart run <script>`:
