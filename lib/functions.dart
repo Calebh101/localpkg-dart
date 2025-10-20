@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:localpkg/src/platform_detect.dart';
 
-
 /// Mode used to format time in [TimeFormatter].
 enum FormatTimeMode {
   /// `hh:mm:ss`
@@ -236,6 +235,49 @@ extension ByteDataExtensions on ByteData {
     return buffer.asUint8List();
   }
 
+  /// Sets the four bytes starting at the specified [byteOffset] in this object
+  /// to the unsigned binary representation of the specified [value],
+  /// which must fit in three bytes.
+  ///
+  /// In other words, [value] must be between
+  /// 0 and 2<sup>24</sup> - 1, inclusive.
+  ///
+  /// The [byteOffset] must be non-negative, and
+  /// `byteOffset + 3` must be less than or equal to the length of this object.
+  void setUint24(int byteOffset, int value, [Endian endian = Endian.big]) {
+    if (value < 0 || value > 0xFFFFFF) {
+      throw RangeError.range(value, 0, 0xFFFFFF, 'value');
+    }
+
+    if (endian == Endian.big) {
+      setUint8(byteOffset, (value >> 16) & 0xFF);
+      setUint8(byteOffset + 1, (value >> 8) & 0xFF);
+      setUint8(byteOffset + 2, value & 0xFF);
+    } else {
+      setUint8(byteOffset, value & 0xFF);
+      setUint8(byteOffset + 1, (value >> 8) & 0xFF);
+      setUint8(byteOffset + 2, (value >> 16) & 0xFF);
+    }
+  }
+
+  /// Sets the four bytes starting at the specified [byteOffset] in this
+  /// object to the two's complement binary representation of the specified
+  /// [value], which must fit in three bytes.
+  ///
+  /// In other words, [value] must lie
+  /// between -2<sup>23</sup> and 2<sup>23</sup> - 1, inclusive.
+  ///
+  /// The [byteOffset] must be non-negative, and
+  /// `byteOffset + 3` must be less than or equal to the length of this object.
+  void setInt24(int byteOffset, int value, [Endian endian = Endian.big]) {
+    if (value < -0x800000 || value > 0x7FFFFF) {
+      throw RangeError.range(value, -0x800000, 0x7FFFFF, 'value');
+    }
+
+    int unsignedValue = value & 0xFFFFFF;
+    setUint24(byteOffset, unsignedValue, endian);
+  }
+
   void _setInt64(bool signed, int byteOffset, int value, Endian endian) {
     if (!isWeb) return setUint64(byteOffset, value, endian);
     int low = value & 0xFFFFFFFF;
@@ -259,7 +301,7 @@ extension ByteDataExtensions on ByteData {
   ///
   /// The [byteOffset] must be non-negative, and
   /// `byteOffset + 8` must be less than or equal to the length of this object.
-  /// 
+  ///
   /// This function is designed to work on web safely.
   void setUint64Safe(int byteOffset, int value, [Endian endian = Endian.big]) {
     return _setInt64(false, byteOffset, value, endian);
@@ -274,7 +316,7 @@ extension ByteDataExtensions on ByteData {
   ///
   /// The [byteOffset] must be non-negative, and
   /// `byteOffset + 8` must be less than or equal to the length of this object.
-  /// 
+  ///
   /// This function is designed to work on web safely.
   void setInt64Safe(int byteOffset, int value, [Endian endian = Endian.big]) {
     return _setInt64(true, byteOffset, value, endian);
@@ -345,7 +387,7 @@ extension FutureAddons<T> on Future<T> {
 /// Addons for lists of functions.
 extension FunctionListAddons<T extends Function> on Iterable<T> {
   /// Calls every single function in this list.
-  /// 
+  ///
   /// Note that this will not wait for futures.
   void chain() {
     for (T function in this) {
@@ -354,7 +396,7 @@ extension FunctionListAddons<T extends Function> on Iterable<T> {
   }
 
   /// Calls every single function in this list.
-  /// 
+  ///
   /// This function will wait for each function, whether future or not.
   FutureOr<void> chainFutures() async {
     for (T function in this) {
@@ -367,7 +409,7 @@ extension FunctionListAddons<T extends Function> on Iterable<T> {
 /// Addons for enums.
 extension EnumAddons on Enum {
   /// Attempts to get the enum value from a string.
-  /// 
+  ///
   /// This will return null if not found.
   static T? fromStringOrNull<T extends Enum>(List<T> values, String target, {bool caseSensitive = true}) {
     if (caseSensitive == false) target = target.toLowerCase();
@@ -376,7 +418,7 @@ extension EnumAddons on Enum {
   }
 
   /// Attempts to get the enum value from a string.
-  /// 
+  ///
   /// This will throw a [StateError] if not found.
   static T fromString<T extends Enum>(List<T> values, String target, {bool caseSensitive = true}) {
     return fromStringOrNull(values, target, caseSensitive: caseSensitive) ?? (throw StateError("No value of '$T' matched '$target'."));
@@ -386,7 +428,7 @@ extension EnumAddons on Enum {
 /// Pads lists to make them a set length.
 extension ListPadder<T> on List<T> {
   /// Fills the list with the provided [value] until it reaches [amount] length, starting from the left. Note that the provided list is not mutated; instead, a copy is returned.
-  /// 
+  ///
   /// If the list length is greater than [amount], then the list is returned unchanged.
   List<T> padLeft(int amount, T value) {
     List<T> list = List.from(this);
@@ -396,7 +438,7 @@ extension ListPadder<T> on List<T> {
   }
 
   /// Fills the list with the provided [value] until it reaches [amount] length, starting from the right. Note that the provided list is mutated; instead, a copy is returned.
-  /// 
+  ///
   /// If the list length is greater than [amount], then the list is returned unchanged.
   List<T> padRight(int amount, T value) {
     List<T> list = List.from(this);
