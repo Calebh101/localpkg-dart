@@ -25,3 +25,9 @@ include: package:localpkg/lints/default.yaml
 There are also some scripts that can be used with `dart run <script>`:
 
 - `localpkg:update`: Update localpkg in the Flutter project.
+
+## Documentation
+
+### Dynamic Numbers
+
+TODO
