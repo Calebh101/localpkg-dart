@@ -6,31 +6,31 @@ import 'package:localpkg/functions.dart';
 ///
 /// If you are planning on adding to this, *do not* edit current numbers' IDs, as this can break existing implentations.
 enum DynamicNumberMode {
-  /// Signed 8-bit integer.
+  /// Signed 8-bit integer. ID: 0
   int8(0, 0, 8),
-  /// Signed 16-bit integer.
+  /// Signed 16-bit integer. ID: 1
   int16(0, 1, 16),
-  /// Signed 24-bit integer.
+  /// Signed 24-bit integer. ID: 2
   int24(0, 2, 24),
-  /// Signed 32-bit integer.
+  /// Signed 32-bit integer. ID: 3
   int32(0, 3, 32),
-  /// Signed 64-bit integer.
+  /// Signed 64-bit integer. ID: 4
   int64(0, 4, 64),
 
-  /// Unsigned 8-bit integer.
+  /// Unsigned 8-bit integer. ID: 5
   uint8(1, 5, 8),
-  /// Unsigned 16-bit integer.
+  /// Unsigned 16-bit integer. ID: 6
   uint16(1, 6, 16),
-  /// Unsigned 24-bit integer.
+  /// Unsigned 24-bit integer. ID: 7
   uint24(1, 7, 24),
-  /// Unsigned 32-bit integer.
+  /// Unsigned 32-bit integer. ID: 8
   uint32(1, 8, 32),
-  /// Unsigned 64-bit integer.
+  /// Unsigned 64-bit integer. ID: 9
   uint64(1, 9, 64),
 
-  /// 32-bit floating point number.
+  /// 32-bit floating point number. ID: 10
   float32(2, 10, 32),
-  /// 64-bit floating point number.
+  /// 64-bit floating point number. ID: 11
   float64(2, 11, 64);
 
   /// The type, or category, of a mode. This is used to filter certain modes.
