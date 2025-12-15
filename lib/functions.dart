@@ -64,7 +64,7 @@ class TimeFormatter {
 }
 
 /// Extension for manipulating numbers.
-extension NumberManager on num {
+extension NumberAddons on num {
   /// Gets if the number is a whole number.
   bool isWhole() => this % 1 == 0;
 
@@ -75,6 +75,19 @@ extension NumberManager on num {
     } else {
       return "$this";
     }
+  }
+
+  /// Map a number from range (`inMin`, `inMax`) to (`outMin`, `outMax`).
+  ///
+  /// Throws a [RangeError] if this number is not in the range of (`inMin`, `inMax`).
+  double mapRange({
+    required num inMin,
+    required num inMax,
+    required num outMin,
+    required num outMax,
+  }) {
+    if (this < inMin || this > inMax) throw RangeError("$this was outside of range ($inMin, $inMax) in mapRange.");
+    return outMin + (this - inMin) * (outMax - outMin) / (inMax - inMin);
   }
 }
 
