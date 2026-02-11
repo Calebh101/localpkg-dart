@@ -8,10 +8,10 @@ In your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-    localpkg:
-        git:
-            url: https://github.com/Calebh101/localpkg-dart.git
-            ref: main
+  localpkg:
+    git:
+      url: https://github.com/Calebh101/localpkg-dart.git
+      ref: main
 ```
 
 ## How to use
@@ -24,7 +24,7 @@ include: package:localpkg/lints/default.yaml
 
 There are also some scripts that can be used with `dart run <script>`:
 
-- `localpkg:update`: Update localpkg in the Flutter project.
+- `localpkg:update`: Update localpkg in the Flutter project. This can also be used globally after activating the package, using `localpkg_update`.
 
 ### Dynamic Numbers
 
