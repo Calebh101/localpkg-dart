@@ -3,18 +3,37 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:http/http.dart' as http;
+import 'package:localpkg/functions.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
-enum ProjectType {
-  dart("localpkg", "localpkg-dart"),
-  flutter("localpkg_flutter", "localpkg-flutter-2");
+/// Defines what's going to be updated with this updater script.
+class Project {
+  /// localpkg (Calebh101/localpkg-dart)
+  static const localpkgDart = Project(package: "localpkg", repo: "Calebh101/localpkg-dart", isFlutter: false);
 
+  /// localpkg_flutter (Calebh101/localpkg-flutter-2)
+  static const localpkgFlutter = Project(package: "localpkg_flutter", repo: "Calebh101/localpkg-flutter-2", isFlutter: true);
+
+  /// The package name of the project.
   final String package;
+
+  /// The repository of the project.
+  /// This must be a GitHub repository.
+  ///
+  /// Example:
+  ///
+  /// ```txt
+  /// Calebh101/localpkg-dart
+  /// ```
   final String repo;
 
-  const ProjectType(this.package, this.repo);
+  /// If the package is a Flutter package.
+  final bool isFlutter;
+
+  /// Defines what's going to be updated with this updater script.
+  const Project({required this.package, required this.repo, required this.isFlutter});
 }
 
 void _debug(Object? input) {
@@ -22,13 +41,14 @@ void _debug(Object? input) {
   print("Updater: $input");
 }
 
-void update(ProjectType project, List<String> arguments) async {
+/// Update the specified project.
+void update(Project project, [List<String> arguments = const []]) async {
   _debug("Starting update script...");
   final package = project.package;
   final repo = project.repo;
 
   ArgParser parser = ArgParser()
-    ..addOption("directory", abbr: "d", help: "Working directory of Dart/Flutter project.", defaultsTo: Directory.current.path)
+    ..addOption("directory", abbr: "d", help: "Working directory of the Dart/Flutter project.", defaultsTo: Directory.current.path)
     ..addOption("commit", abbr: "c", help: "Commit to use for $package.")
     ..addFlag("help", abbr: "h", help: "Show help message.");
 
@@ -55,13 +75,13 @@ void update(ProjectType project, List<String> arguments) async {
   YamlEditor editor = YamlEditor(await pubspec.readAsString());
   var loaded = editor.parseAt([]);
   var data = yamlToMap(loaded);
-  Map<String, dynamic>? localpkg = data["dependencies"]?[package];
+  Map<String, dynamic>? found = data["dependencies"]?[package];
 
-  String? initialCommitSetting = localpkg?["git"]?["ref"];
+  String? initialCommitSetting = found?["git"]?["ref"];
   if (initialCommitSetting == "main") initialCommitSetting = null;
 
   _debug("Fetching latest commit...");
-  http.Response response = await http.get(Uri.parse("https://api.github.com/repos/Calebh101/$repo/commits/${args["commit"] ?? "main"}"));
+  http.Response response = await http.get(Uri.parse("https://api.github.com/repos/$repo/commits/${args["commit"] ?? "main"}"));
 
   if (response.statusCode < 200 || response.statusCode >= 300) {
     _debug("Received bad request for API call: code ${response.statusCode}.");
@@ -80,13 +100,13 @@ void update(ProjectType project, List<String> arguments) async {
   }
 
   _debug("Updating data...");
-  editor.update(["dependencies", package], {"git": {"url": "https://github.com/Calebh101/$repo.git", "ref": sha}});
+  editor.update(["dependencies", package], {"git": {"url": "https://github.com/$repo.git", "ref": sha}});
 
   await pubspec.writeAsString(editor.toString());
   await resetGitCache(repo, sha);
 
   _debug("Updating packages...");
-  var process = await Process.start(project == ProjectType.dart ? "dart" : "flutter", ["pub", "get"], runInShell: true, workingDirectory: directory.path);
+  var process = await Process.start(project.isFlutter ? "flutter" : "dart", ["pub", "get"], runInShell: true, workingDirectory: directory.path);
   process.stdout.transform(utf8.decoder).listen(stdout.write);
   process.stderr.transform(utf8.decoder).listen(stderr.write);
   int exitCode = await process.exitCode;
@@ -100,6 +120,7 @@ void update(ProjectType project, List<String> arguments) async {
   }
 }
 
+/// Turns YAML into an object.
 dynamic yamlToMap(dynamic yaml) {
   if (yaml is YamlMap) {
     return Map<String, dynamic>.fromEntries(
@@ -112,6 +133,7 @@ dynamic yamlToMap(dynamic yaml) {
   }
 }
 
+/// Reset the Git cache of a repository.
 Future<void> resetGitCache(String repo, String sha) async {
   final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
   if (home == null) return;
@@ -131,10 +153,4 @@ Future<void> resetGitCache(String repo, String sha) async {
   if (cached == null) return;
   final dir = Directory(cached.path);
   await dir.delete(recursive: true);
-}
-
-extension FutureAddons<T> on Future<T> {
-  Future<bool> willEqual(T value) async {
-    return (await this) == value;
-  }
 }
