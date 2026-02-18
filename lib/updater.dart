@@ -1,9 +1,16 @@
+/// Author: Calebh101 (Copyright (C) 2026 Calebh101)
+/// Version: 1.0.0A
+/// Original repository: Calebh101/localpkg-dart
+///
+/// This file is for letting a package update itself in a Dart/Flutter project.
+/// This may be copied across projects or referenced by imports.
+library;
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:http/http.dart' as http;
-import 'package:localpkg/functions.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
@@ -42,7 +49,7 @@ void _debug(Object? input) {
 }
 
 /// Update the specified project.
-void update(Project project, [List<String> arguments = const []]) async {
+void update(Project project, {List<String> arguments = const []}) async {
   _debug("Starting update script...");
   final package = project.package;
   final repo = project.repo;
@@ -153,4 +160,14 @@ Future<void> resetGitCache(String repo, String sha) async {
   if (cached == null) return;
   final dir = Directory(cached.path);
   await dir.delete(recursive: true);
+}
+
+/// Some nice addons to [Future]s.
+///
+/// Originally from 'localpkg/functions.dart'.
+extension FutureAddons<T> on Future<T> {
+  /// Returns a `Future<bool>` that represents if the future will equal the inputted [value] when it completes.
+  Future<bool> willEqual(T value) async {
+    return (await this) == value;
+  }
 }
