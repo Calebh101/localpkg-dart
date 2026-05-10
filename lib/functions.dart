@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:localpkg/src/platform_detect.dart';
 
 /// Mode used to format time in [TimeFormatter].
@@ -459,4 +460,105 @@ extension ListPadder<T> on List<T> {
     list.addAll(List.filled(amount - length, value));
     return list;
   }
+}
+
+/// Defines a typed error/exception catcher.
+class Catch<T extends Object, R> {
+  /// [e] is the exception.
+  final R? Function(T e) callback;
+
+  /// Defines a typed error/exception catcher.
+  const Catch(this.callback);
+
+  bool _checkType(dynamic input) {
+    return input is T;
+  }
+
+  /// Rethrows the inputted exception.
+  factory Catch.rethrower() {
+    return Catch((e) => throw e);
+  }
+}
+
+/// Run a synchronous task in a try/catch.
+///
+/// [onCatchTyped] is a list of [Catch]es. You define a type, and if an exception of that type is caught, then that callback is ran.
+/// [Catch]es are evaluated first to last, and subtypes will match. This is how types are checked:
+///
+/// ```dart
+/// bool _checkType(dynamic input) {
+///   return input is T;
+/// }
+/// ```
+///
+/// If no typed catches are found, then [onCatch] is ran. If [onCatch] is null, null is returned.
+///
+/// Do not use this for futures! Futures must be awaited to be caught, so you must use [tryCatchA] for futures.
+T? tryCatch<T>(T? Function() callback, {T? Function(Object e)? onCatch, List<Catch<Object, T>> onCatchTyped = const []}) {
+  if (<T>[] is List<Future>) {
+    throw Exception("tryCatch can not be used with a Future. Use tryCatchA instead. Received: $T");
+  }
+
+  try {
+    return callback.call();
+  } catch (e) {
+    final catchF = onCatchTyped.firstWhereOrNull((x) => x._checkType(e));
+    return catchF?.callback.call(e) ?? onCatch?.call(e);
+  }
+}
+
+/// Run an asynchronous task in a try/catch.
+///
+/// [onCatchTyped] is a list of [Catch]es. You define a type, and if an exception of that type is caught, then that callback is ran.
+/// [Catch]es are evaluated first to last, and subtypes will match. This is how types are checked:
+///
+/// ```dart
+/// bool _checkType(dynamic input) {
+///   return input is T;
+/// }
+/// ```
+///
+/// If no typed catches are found, then [onCatch] is ran. If [onCatch] is null, null is returned.
+Future<T?> tryCatchA<T>(FutureOr<T>? Function() callback, {FutureOr<T?> Function(Object e)? onCatch, List<Catch<Object, FutureOr<T>>> onCatchTyped = const []}) async {
+  try {
+    return await callback.call();
+  } catch (e) {
+    final catchF = onCatchTyped.firstWhereOrNull((x) => x._checkType(e));
+    return await (catchF?.callback.call(e) ?? onCatch?.call(e));
+  }
+}
+
+/// `NullIfEmpty` extension on `Iterable<T>`.
+extension NullIfEmptyIterable<T> on Iterable<T> {
+  /// If this iterable is empty, return null. Otherwise, return the iterable.
+  Iterable<T>? get nullIfEmpty => isEmpty ? null : this;
+}
+
+/// `NullIfEmpty` extension on `Map<K, V>`.
+extension NullIfEmptyMap<K, V> on Map<K, V> {
+  /// If this map is empty, return null. Otherwise, return the map.
+  Map<K, V>? get nullIfEmpty => isEmpty ? null : this;
+}
+
+/// `NullIfEmpty` extension on `String`.
+extension NullIfEmptyString on String {
+  /// If this string is empty, return null. Otherwise, return the string.
+  ///
+  /// This returns null only if there are 0 characters. Spaces count.
+  String? get nullIfEmpty => isEmpty ? null : this;
+
+  /// If this string after being trimmed is empty, return null. Otherwise, return the string.
+  String? get nullIfEmptyTrimmed => trim().isEmpty ? null : this;
+}
+
+/// `NullIfEmpty` extension on `num`.
+extension NullIfEmptyNum on num {
+  /// If this number is 0, return null. Otherwise, return the number.
+  num? get nullIfZero => this == 0 ? null : this;
+
+  /// If this number is less than 0, return null. Otherwise, return the number.
+  num? get nullIfNegative => this < 0 ? null : this;
+
+  /// If this number is equal to or less than 0, return null. Otherwise, return the number.
+  num? get nullIfNotPositive => this <= 0 ? null : this;
 }
