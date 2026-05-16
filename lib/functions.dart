@@ -541,6 +541,7 @@ extension NullIfEmptyMap<K, V> on Map<K, V> {
 }
 
 /// `NullIfEmpty` extension on `String`.
+/// Also contains 'isEmptyTrimmed'.
 extension NullIfEmptyString on String {
   /// If this string is empty, return null. Otherwise, return the string.
   ///
@@ -549,6 +550,9 @@ extension NullIfEmptyString on String {
 
   /// If this string after being trimmed is empty, return null. Otherwise, return the string.
   String? get nullIfEmptyTrimmed => trim().isEmpty ? null : this;
+
+  /// Whether this string, after being trimmed, is empty.
+  bool get isEmptyTrimmed => trim().isEmpty;
 }
 
 /// `NullIfEmpty` extension on `num`.
