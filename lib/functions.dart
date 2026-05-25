@@ -494,7 +494,7 @@ class Catch<T extends Object, R> {
 /// If no typed catches are found, then [onCatch] is ran. If [onCatch] is null, null is returned.
 ///
 /// Do not use this for futures! Futures must be awaited to be caught, so you must use [tryCatchA] for futures.
-T? tryCatch<T>(T? Function() callback, {T? Function(Object e)? onCatch, List<Catch<Object, T>> onCatchTyped = const []}) {
+T? tryCatch<T>(T? Function() callback, {T? Function(Object e)? onCatch, void Function(Object e)? onError, List<Catch<Object, T>> onCatchTyped = const []}) {
   if (<T>[] is List<Future>) {
     throw Exception("tryCatch can not be used with a Future. Use tryCatchA instead. Received: $T");
   }
@@ -502,6 +502,7 @@ T? tryCatch<T>(T? Function() callback, {T? Function(Object e)? onCatch, List<Cat
   try {
     return callback.call();
   } catch (e) {
+    onError?.call(e);
     final catchF = onCatchTyped.firstWhereOrNull((x) => x._checkType(e));
     return catchF?.callback.call(e) ?? onCatch?.call(e);
   }
@@ -519,10 +520,11 @@ T? tryCatch<T>(T? Function() callback, {T? Function(Object e)? onCatch, List<Cat
 /// ```
 ///
 /// If no typed catches are found, then [onCatch] is ran. If [onCatch] is null, null is returned.
-Future<T?> tryCatchA<T>(FutureOr<T>? Function() callback, {FutureOr<T?> Function(Object e)? onCatch, List<Catch<Object, FutureOr<T>>> onCatchTyped = const []}) async {
+Future<T?> tryCatchA<T>(FutureOr<T>? Function() callback, {FutureOr<T?> Function(Object e)? onCatch, void Function(Object e)? onError, List<Catch<Object, FutureOr<T>>> onCatchTyped = const []}) async {
   try {
     return await callback.call();
   } catch (e) {
+    onError?.call(e);
     final catchF = onCatchTyped.firstWhereOrNull((x) => x._checkType(e));
     return await (catchF?.callback.call(e) ?? onCatch?.call(e));
   }
