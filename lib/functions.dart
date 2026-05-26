@@ -568,3 +568,19 @@ extension NullIfEmptyNum on num {
   /// If this number is equal to or less than 0, return null. Otherwise, return the number.
   num? get nullIfNotPositive => this <= 0 ? null : this;
 }
+
+/// Provides utilities for maps.
+extension MapAddons<K, V> on Map<K, V> {
+  /// Like `entries.map`, but with specific key (`k`) and value (`v`) parameters.
+  Iterable<T> mapTo<T>(T Function(K k, V v) callback) {
+    return entries.map((x) => callback(x.key, x.value));
+  }
+}
+
+/// Addons on iterables.
+extension IterableAddons<T> on Iterable<T> {
+  /// [map] but returns a [List].
+  List<E> mapToList<E>(E Function(T e) toElement) {
+    return map((x) => toElement(x)).toList();
+  }
+}
