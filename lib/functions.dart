@@ -70,12 +70,17 @@ extension NumberAddons on num {
   bool isWhole() => this % 1 == 0;
 
   /// Returns a clean number. If this is a double but is a whole number, it is converted to an integer.
-  String clean() {
-    if (this is double && isWhole()) {
-      return "${toInt()}";
-    } else {
-      return "$this";
+  String clean({int? maxDecimalPlaces}) {
+    if (this is double) {
+      final d = this as double;
+      if (d.isNaN || d.isInfinite) return "$this";
+      if (d.isWhole()) return "${d.toInt()}";
+
+      if (maxDecimalPlaces != null) return d.toStringAsFixed(maxDecimalPlaces);
+      return "$d";
     }
+
+    return "$this";
   }
 
   /// Map a number from range (`inMin`, `inMax`) to (`outMin`, `outMax`).
