@@ -86,6 +86,8 @@ extension NumberAddons on num {
   /// Map a number from range (`inMin`, `inMax`) to (`outMin`, `outMax`).
   ///
   /// Throws a [RangeError] if this number is not in the range of (`inMin`, `inMax`).
+  ///
+  /// [inMin], [inMax], [outMin], and [outMax] are all inclusive.
   double mapRange({
     required num inMin,
     required num inMax,
