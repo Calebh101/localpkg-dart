@@ -1,7 +1,8 @@
 library;
 
-export 'package:localpkg/classes.dart';
-export 'package:localpkg/constants.dart';
-export 'package:localpkg/functions.dart';
+export 'package:localpkg/src/classes.dart';
+export 'package:localpkg/src/constants.dart';
+export 'package:localpkg/src/functions.dart';
 
-export 'package:localpkg/src/platform_detect.dart';
+export 'package:localpkg/src/dynamic_number.dart';
+export 'package:localpkg/src/platform/platform_detect.dart';

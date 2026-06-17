@@ -1,0 +1,1 @@
+export 'package:localpkg/src/platform/platform_other.dart' if (dart.library.html) 'package:localpkg/src/platform_web.dart';

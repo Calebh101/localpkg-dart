@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:localpkg/functions.dart';
+import 'package:localpkg/src/functions.dart';
 
 /// Different types of numbers, with their respective IDs.
 ///

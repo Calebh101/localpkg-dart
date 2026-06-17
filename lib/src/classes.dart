@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-export 'package:localpkg/src/dynamic_number.dart';
-
 /// Manages versions and version parsing.
 class Version implements Comparable<Version> {
   /// `a` in `a.b.c`.
