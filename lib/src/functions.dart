@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -589,5 +590,38 @@ extension IterableAddons<T> on Iterable<T> {
   /// [map] but returns a [List].
   List<E> mapToList<E>(E Function(T e) toElement) {
     return map((x) => toElement(x)).toList();
+  }
+
+  /// Get a random item from this iterable.
+  ///
+  /// If [random] is provided, it will be used with `nextInt`.
+  T random({Random? random}) {
+    random ??= Random();
+    return elementAt(random.nextInt(length));
+  }
+}
+
+/// Addons on lists.
+extension ListAddons<T> on List<T> {
+  /// Removes all objects from this list that satisfy [test].
+  ///
+  /// An object `o` satisfies [test] if `test(o)` is true.
+  /// ```dart
+  /// final numbers = <String>['one', 'two', 'three', 'four'];
+  /// final count = numbers.removeWhere((item) => item.length == 3);
+  /// print(numbers); // [three, four]
+  /// print(count); // 2
+  /// ```
+  /// The list must be growable.
+  ///
+  /// The function will return a count of how many items satisfied [test] before being removed.
+  ///
+  /// [test] will be called twice, one for counting, and one for removing (using [removeWhere]).
+  int removeWhereWithCount(bool Function(T element) test) {
+    int count = 0;
+    for (final x in this) if (test(x)) count++;
+
+    removeWhere(test);
+    return count;
   }
 }
