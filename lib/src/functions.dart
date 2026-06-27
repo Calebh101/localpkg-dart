@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:localpkg/localpkg.dart';
 import 'package:localpkg/src/platform/platform_detect.dart';
 
 /// Mode used to format time in [TimeFormatter].
@@ -624,4 +625,11 @@ extension ListAddons<T> on List<T> {
     removeWhere(test);
     return count;
   }
+}
+
+/// Choose a word based on the inputted count.
+///
+/// Shorter version of [Word.fromCount].
+String fromCount(int count, String singular, [String? plural]) {
+  return Word.fromCount(count, singular: Word(singular), plural: plural != null ? Word(plural) : null).word;
 }
