@@ -633,3 +633,39 @@ extension ListAddons<T> on List<T> {
 String fromCount(int count, String singular, [String? plural]) {
   return Word.fromCount(count, singular: Word(singular), plural: plural != null ? Word(plural) : null).word;
 }
+
+/// [count] == 1: `Was`, `was`<br>
+/// else: `Were`, `were`
+String wasWere(int count, {bool titleCase = false}) {
+  return count == 1 ? (titleCase ? "Was" : "was") : (titleCase ? "Were" : "were");
+}
+
+/// [count] == 1: `Is`, `is`<br>
+/// else: `Are`, `are`
+String isAre(int count, {bool titleCase = false}) {
+  return count == 1 ? (titleCase ? "Is" : "is") : (titleCase ? "Are" : "are");
+}
+
+/// [count] == 1: `Has`, `has`<br>
+/// else: `Have`, `have`
+String hasHave(int count, {bool titleCase = false}) {
+  return count == 1 ? (titleCase ? "Has" : "has") : (titleCase ? "Have" : "have");
+}
+
+/// [count] == 1: `Does`, `does`<br>
+/// else: `Do`, `do`
+String doesDo(int count, {bool titleCase = false}) {
+  return count == 1 ? (titleCase ? "Does" : "does") : (titleCase ? "Do" : "do");
+}
+
+/// [count] == 1: `This`, `this`<br>
+/// else: `These`, `these`
+String thisThese(int count, {bool titleCase = false}) {
+  return count == 1 ? (titleCase ? "This" : "this") : (titleCase ? "These" : "these");
+}
+
+/// [count] == 1: `That`, `that`<br>
+/// else: `Those`, `those`
+String thatThose(int count, {bool titleCase = false}) {
+  return count == 1 ? (titleCase ? "That" : "that") : (titleCase ? "Those" : "those");
+}
