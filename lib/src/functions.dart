@@ -669,3 +669,16 @@ String thisThese(int count, {bool titleCase = false}) {
 String thatThose(int count, {bool titleCase = false}) {
   return count == 1 ? (titleCase ? "That" : "that") : (titleCase ? "Those" : "those");
 }
+
+/// Addons for [String].
+extension StringAddons on String {
+  /// If a string is longer than [max], return the string truncated, with an ellipsis at the end.
+  ///
+  /// Otherwise, return the original string.
+  String max(int max) {
+    assert(max > 0);
+    if (length <= max) return this;
+    if (max <= 3) return substring(0, max);
+    return "${substring(0, max - 3)}...";
+  }
+}
