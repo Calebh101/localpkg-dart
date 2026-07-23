@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:localpkg/localpkg.dart';
-import 'package:localpkg/src/platform/platform_detect.dart';
+import 'package:localpkg/src/platform/detect.dart';
 
 /// Mode used to format time in [TimeFormatter].
 enum FormatTimeMode {
