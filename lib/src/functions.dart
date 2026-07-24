@@ -377,15 +377,20 @@ extension ByteFormatterSingular on int {
 }
 
 /// Addons for every object.
-extension ObjectAddons on Object? {
+extension ObjectAddons<T> on T {
   /// Literally just returns nothing. This is helpful for one-line return statements.
   void toVoid() {
     return;
   }
 
   /// Returns the value you put in. This is helpful for one-line return statements.
-  T thenReturn<T>(T value) {
+  R thenReturn<R>(R value) {
     return value;
+  }
+
+  /// If [callback] is true, return `null`. Otherwise, return the object.
+  T? nullIf(bool Function(T object) callback) {
+    return callback(this) ? null : this;
   }
 }
 
@@ -576,6 +581,12 @@ extension NullIfEmptyNum on num {
 
   /// If this number is equal to or less than 0, return null. Otherwise, return the number.
   num? get nullIfNotPositive => this <= 0 ? null : this;
+
+  /// If this number is less than 0, return null. Otherwise, return the number.
+  num? get nullIfPositive => this > 0 ? null : this;
+
+  /// If this number is equal to or less than 0, return null. Otherwise, return the number.
+  num? get nullIfNotNegative => this >= 0 ? null : this;
 }
 
 /// Provides utilities for maps.
@@ -583,6 +594,17 @@ extension MapAddons<K, V> on Map<K, V> {
   /// Like `entries.map`, but with specific key (`k`) and value (`v`) parameters.
   Iterable<T> mapTo<T>(T Function(K k, V v) callback) {
     return entries.map((x) => callback(x.key, x.value));
+  }
+
+  /// Like `entries.map`, but with specific key (`k`) and value (`v`) parameters, and returns a [List].
+  List<T> mapToList<T>(T Function(K k, V v) callback) {
+    return mapTo(callback).toList();
+  }
+
+  /// The map entries of this [Map].
+  /// Returns an [Iterable] of `(K key, V value)`.
+  Iterable<(K key, V value)> get entriesAsRecords {
+    return entries.map((x) => (x.key, x.value));
   }
 }
 
