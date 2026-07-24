@@ -383,9 +383,15 @@ extension ObjectAddons<T> on T {
     return;
   }
 
+  @Deprecated("Use thenReturnFrom instead.")
   /// Returns the value you put in. This is helpful for one-line return statements.
   R thenReturn<R>(R value) {
     return value;
+  }
+
+  /// Returns the value you return from [callback]. This is helpful for one-line return statements.
+  R thenReturnFrom<R>(R Function(T object) callback) {
+    return callback(this);
   }
 
   /// If [callback] is true, return `null`. Otherwise, return the object.
@@ -603,8 +609,8 @@ extension MapAddons<K, V> on Map<K, V> {
 
   /// The map entries of this [Map].
   /// Returns an [Iterable] of `(K key, V value)`.
-  Iterable<(K key, V value)> get entriesAsRecords {
-    return entries.map((x) => (x.key, x.value));
+  Iterable<(int index, K key, V value)> get entriesAsRecords {
+    return entries.mapIndexed((i, x) => (i, x.key, x.value));
   }
 }
 
