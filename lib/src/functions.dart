@@ -621,6 +621,19 @@ extension IterableAddons<T> on Iterable<T> {
     return map((x) => toElement(x)).toList();
   }
 
+  /// Creates a new [List] with all elements that have type [E].
+  ///
+  /// The matching elements have the same order in the returned iterable
+  /// as they have in [iterator].
+  ///
+  /// This method returns a view of the mapped elements.
+  /// Iterating will not cache results, and thus iterating multiple times over
+  /// the returned [List] may yield different results,
+  /// if the underlying elements change between iterations.
+  List<E> whereTypeToList<E>() {
+    return whereType<E>().toList();
+  }
+
   /// Get a random item from this iterable.
   ///
   /// If [random] is provided, it will be used with `nextInt`.
