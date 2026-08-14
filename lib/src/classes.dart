@@ -281,3 +281,18 @@ class Word implements Comparable<Word> {
     return count == 1 || count == 1.0 ? singular : plural;
   }
 }
+
+/// Generic error for program failures.
+class UnexpectedError extends Error {
+  /// Message that will be shown with this error.
+  final String? message;
+
+  /// Generic error for program failures.
+  UnexpectedError([this.message]);
+
+  @override
+  String toString() {
+    if (message == null) return "UnexpectedError";
+    return "UnexpectedError: $message";
+  }
+}
