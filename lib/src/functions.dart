@@ -666,6 +666,41 @@ extension ListAddons<T> on List<T> {
     removeWhere(test);
     return count;
   }
+
+  /// Make sure this list is no more than [max] length.
+  ///
+  /// If the list's length is exactly or below [max], the original list will be returned.
+  ///
+  /// Otherwise, the list will be [sublist]ed, and that will be returned.
+  List<T> maxLength(int max) {
+    if (length <= max) return this;
+    return sublist(0, max);
+  }
+}
+
+/// Addons for [String].
+extension StringAddons on String {
+  /// If a string is longer than [max], return the string truncated, with an ellipsis at the end.
+  ///
+  /// Otherwise, return the original string.
+  @Deprecated("Use maxLength instead.")
+  String max(int max) {
+    assert(max > 0);
+    if (length <= max) return this;
+    if (max <= 3) return substring(0, max);
+    return "${substring(0, max - 3)}...";
+  }
+
+  /// If a string is longer than [max], return the string truncated, with an optional ellipsis at the end.
+  ///
+  /// Otherwise, return the original string.
+  String maxLength(int max, {bool ellipsis = false}) {
+    assert(max > 0);
+    if (length <= max) return this;
+    if (!ellipsis) return substring(0, max);
+    if (max <= 3) return substring(0, max);
+    return "${substring(0, max - 3)}...";
+  }
 }
 
 /// Choose a word based on the inputted count.
@@ -709,17 +744,4 @@ String thisThese(int count, {bool titleCase = false}) {
 /// else: `Those`, `those`
 String thatThose(int count, {bool titleCase = false}) {
   return count == 1 ? (titleCase ? "That" : "that") : (titleCase ? "Those" : "those");
-}
-
-/// Addons for [String].
-extension StringAddons on String {
-  /// If a string is longer than [max], return the string truncated, with an ellipsis at the end.
-  ///
-  /// Otherwise, return the original string.
-  String max(int max) {
-    assert(max > 0);
-    if (length <= max) return this;
-    if (max <= 3) return substring(0, max);
-    return "${substring(0, max - 3)}...";
-  }
 }
